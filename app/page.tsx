@@ -141,15 +141,45 @@ export default function RegistrationForm() {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center space-y-6 py-4 animate-in fade-in zoom-in duration-500">
-            <div className="text-center space-y-2">
-              <h3 className="text-xl font-bold text-white">Clearance Granted</h3>
-              <p className="text-sm text-slate-400">Identity verified and logged.</p>
+          <div className="flex flex-col items-center animate-in zoom-in-95 duration-700 w-full mt-4">
+            
+            {/* NEW: The Tactical Digital ID Badge */}
+            <div className="w-full max-w-sm bg-slate-800 border border-emerald-500/30 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(16,185,129,0.15)] relative">
+              
+              {/* Badge Header */}
+              <div className="bg-emerald-900/40 p-4 border-b border-emerald-500/30 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-50"></div>
+                <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Official Security Pass</p>
+                <p className="text-slate-400 text-xs font-mono mt-1">FORUM DSA 2026 • MITEC</p>
+              </div>
+
+              {/* QR Code Area with Scanner Brackets */}
+              <div className="p-8 flex justify-center relative bg-slate-900/50">
+                {/* Tactical Corner Brackets */}
+                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-emerald-500/70"></div>
+                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-emerald-500/70"></div>
+                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-emerald-500/70"></div>
+                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-emerald-500/70"></div>
+
+                <div className="p-3 bg-white rounded-xl relative overflow-hidden group shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                  <QRCodeSVG value={`verify-${qrValue}`} size={190} />
+                  
+                  {/* The Simulated Scanner Laser */}
+                  <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 shadow-[0_0_10px_red] animate-[ping_2.5s_ease-in-out_infinite] opacity-60"></div>
+                </div>
+              </div>
+
+              {/* Badge Footer */}
+              <div className="bg-slate-800 p-5 text-center border-t border-slate-700 relative">
+                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Clearance ID</p>
+                <p className="font-mono text-emerald-400 text-lg tracking-widest">{qrValue}</p>
+                <p className="text-[10px] text-slate-500 mt-3 font-mono">
+                  PRESENT TO PHYSICAL PERIMETER SCANNER
+                </p>
+              </div>
             </div>
-            <div className="p-4 bg-white rounded-xl shadow-lg border-4 border-emerald-500/20">
-              <QRCodeSVG value={`verify-${qrValue}`} size={220} />
-            </div>
-            <Link href="/forum" className="mt-6 w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded transition-colors shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+
+            <Link href="/forum" className="mt-8 w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] uppercase tracking-wider text-sm">
               Enter Main Forum Portal →
             </Link>
           </div>
