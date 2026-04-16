@@ -92,9 +92,15 @@ export default function SecurityScanner() {
                 OPTICS ACTIVE: AWAITING PASS...
               </div>
               <Scanner 
-                onResult={(text, result) => handleScan(text)} 
-                onError={(error) => console.log(error?.message)}
-                options={{ delayBetweenScanSuccess: 2000 }}
+                onScan={(detectedCodes) => {
+                  // The new API returns an array of detected codes. 
+                  // We grab the first one and extract its raw text value.
+                  if (detectedCodes && detectedCodes.length > 0) {
+                    handleScan(detectedCodes[0].rawValue);
+                  }
+                }} 
+                onError={(error: any) => console.log(error?.message)}
+                scanDelay={2000}
               />
             </div>
           )}
