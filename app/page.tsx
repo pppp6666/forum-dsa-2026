@@ -99,10 +99,6 @@ export default function RegistrationForm() {
                 <input type="text" required className="w-full p-3 bg-slate-800/50 border border-slate-600 rounded text-white focus:outline-none focus:border-emerald-500" onChange={(e) => setFormData({...formData, organization: e.target.value})} />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Create Secure Passphrase (Min 8 Chars)</label>
-                <input type="password" required minLength={6} className="w-full p-3 bg-slate-800/50 border border-slate-600 rounded text-white focus:outline-none focus:border-emerald-500" onChange={(e) => setFormData({...formData, password: e.target.value})} />
-              </div>
-              <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Create Secure Passphrase</label>
                 <div className="relative">
                   <input 
