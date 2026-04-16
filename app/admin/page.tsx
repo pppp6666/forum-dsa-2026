@@ -4,13 +4,13 @@ import { auth, db } from "../../lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // NEW: We need this to route to the scanner
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [registrations, setRegistrations] = useState<any[]>([]);
   const router = useRouter();
 
-  // 1. Security Firewall: Verify Admin Role
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -29,15 +29,13 @@ export default function AdminDashboard() {
     return () => unsubscribeAuth();
   }, [router]);
 
-  // 2. Real-Time Uplink: Fetch Registrations
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    // Listen to the registrations collection, ordered by newest first
     const q = query(collection(db, "registrations"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const regData = snapshot.docs.map(doc => ({
-        id: doc.id, // The document ID is their Clearance ID
+        id: doc.id,
         ...doc.data()
       }));
       setRegistrations(regData);
@@ -51,21 +49,35 @@ export default function AdminDashboard() {
     router.push("/login");
   };
 
-  if (!isAuthenticated) return null; // Prevent UI flicker before auth clears
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-slate-200 p-6">
       <div className="max-w-7xl mx-auto mt-8">
         
         {/* Dashboard Header */}
-        <div className="flex justify-between items-center border-b border-slate-700 pb-6 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-700 pb-6 mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-wider uppercase">Level 4: Security Admin</h1>
             <p className="text-blue-400 font-mono text-sm mt-1">Master Clearance Ledger • Active Headcount: {registrations.length}</p>
           </div>
-          <button onClick={handleLogout} className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded transition-colors text-sm font-bold tracking-widest">
-            TERMINATE SESSION
-          </button>
+          
+          {/* NEW: Tactical Command Buttons */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Link 
+              href="/scanner" 
+              className="flex-1 md:flex-none px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded transition-colors text-sm font-bold tracking-widest flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
+              </svg>
+              LAUNCH OPTICS
+            </Link>
+            <button onClick={handleLogout} className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded transition-colors text-sm font-bold tracking-widest">
+              TERMINATE
+            </button>
+          </div>
         </div>
 
         {/* Data Table */}
